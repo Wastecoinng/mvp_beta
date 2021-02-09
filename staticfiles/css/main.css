@@ -1,0 +1,161 @@
+.nav-style{
+    text-align: center;
+}
+.nav-p{
+    font-size:0.75rem;
+}
+#dashboard_div{
+    height: 100vh;
+    background-color: #F1F0F8;
+}
+#over-lay{
+    position: absolute;
+    top: 0;
+    z-index: 3;
+    height:40vh;
+    width: 100%;
+    padding:8%;
+    background-color: transparent;
+}
+.p-white{
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 24px;
+    margin-bottom:0;
+}
+.badge-dark{
+    padding: 2.5%!important;
+    background-color: #1773A6!important;
+    border-radius: 50%;
+    width:22px;
+    height:22px;
+    margin-left: -15px;
+}
+.p-white-big{
+    color: #fff;
+    font-size: 2.3rem;
+    line-height: 61px;
+    margin-bottom:0;
+}
+.p-white-big-top{
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 61px;
+    margin-bottom:0;
+}
+.p-dark-big{
+    color: #92D4CA;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    line-height: 50px;;
+    margin-bottom:0;
+}
+#note-p{
+    color: rgba(64, 64, 64, 0.7);
+    font-size: 1rem;
+    line-height: 30px;
+    margin-bottom:0;
+}
+#note-date{
+    color: #CDCED2;
+    font-size: 0.8rem;
+    margin-bottom:0;
+}
+#note-div{
+    text-align: right;
+}
+.p-white-small{
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.8rem;
+    line-height: 20px;
+    margin-top: -0.9rem;
+    margin-bottom:0.4rem;
+}
+#right-side{
+    text-align: right;
+}
+.dashboard-bottom{
+    padding:8%;
+}
+.wallet-bottom{
+    padding:8%;
+    margin-top:-10vh;
+}
+.profile-bottom{
+    padding:8%;
+    margin-top:-20vh;
+    text-align: center;
+}
+.bottom-content{
+    width: 100px;
+    height: 100px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 2px #C4C4C4;
+    border-radius: 20px;
+}
+
+.modal_label{
+    color: #1773A6;
+}
+
+.transaction-row{
+    width: 100%;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 2px #C4C4C4;
+    margin-bottom:5px;
+    /* border-radius: 20px; */
+}
+.profile-row{
+    width: 100%;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 2px #C4C4C4;
+    margin-bottom:15px;
+    border-radius: 10px;
+}
+#biodata-inner-left{
+    text-align: left;
+}
+.profile-p{
+    color: rgba(64, 64, 64, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+.profile-pr{
+    color: rgba(64, 64, 64, 0.7);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+#profile-div-right{
+    text-align: left;
+}
+/*MOBILE RESPONSIVENES */
+@media screen and (max-width: 365px) {
+    body{
+        overflow-y: auto;
+    } 
+    .profile-p{
+        color: rgba(64, 64, 64, 0.7);
+        font-size: 0.7rem;
+        margin-bottom: 0;
+    }
+    .profile-pr{
+        color: rgba(64, 64, 64, 0.7);
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+    .p-dark-big{
+        color: #92D4CA;
+        font-size: 1.0rem;
+        font-weight: bolder;
+        line-height: 50px;;
+        margin-bottom:0;
+    }
+    #profile-img{
+        width:20%;
+        height:20%;
+    }
+}

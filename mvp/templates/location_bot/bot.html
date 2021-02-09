@@ -1,0 +1,113 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+
+<div class="alert alert-primary" id="server_message_success" role="alert"></div>
+<div class="alert alert-danger" id="server_message_error" role="alert"></div>
+
+<form method="POST" style="padding:8%; height:auto; text-align: center;">
+    {% csrf_token %}
+    <p>Kindly fill the form and submit. Thanks</p>
+    <input name="lat" id="lat" hidden/>
+    <input name="long" id="long" hidden/>
+    <input type="text" id="hub_name" placeholder="Hub Name" class="onboarding_form_input mb-3">
+    <input type="text" id="address" placeholder="Address" class="onboarding_form_input mb-3">
+    <input type="text" id="council" placeholder="Council Area" class="onboarding_form_input mb-3">
+    <input type="text"  placeholder="State/Province"  id="state" class="onboarding_form_input mb-1">
+    <select id="country" class="onboarding_form_input mb-3">
+        <option value="Nigeria" selected>Nigeria</option>
+        <option value="Saudi_Arabia">Saudi Arabia</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="United_Kingdom">United Kingdom</option>
+    </select>
+    
+    <input type="submit" value="Submit hub location" class="onboarding_form_submit mt-3 mb-3" id="hub_submit">
+
+</form>
+
+<div id="mapholder"></div>
+
+<script>
+    $(document).ready(function(){
+        getLocation();
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+    document.getElementById("lat").value = position.coords.latitude;
+    document.getElementById("long").value = position.coords.longitude;
+    var latlon = position.coords.latitude + "," + position.coords.longitude;
+    console.log(latlon);
+    
+
+    // var img_url = "https://maps.googleapis.com/maps/api/staticmap?center="+latlon+"&zoom=14&size=400x300&sensor=false&key="+api_key;
+
+    // document.getElementById("mapholder").innerHTML = "<img src='"+img_url+"'>";
+
+    
+    
+
+        }
+});
+
+// SIGN UP API
+$(function(){
+    $('#hub_submit').on('click', function (e) {
+        e.preventDefault();
+        
+        let hub_name = document.getElementById("hub_name").value;
+        let latitute = document.getElementById("lat").value;
+        let longitude = document.getElementById("long").value;
+        let address = document.getElementById("address").value;
+        let council = document.getElementById("council").value;
+        let state = document.getElementById("state").value;
+        let country = document.getElementById("country").value;
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        document.getElementById("spinner").style.display = "block";
+        $.ajax({
+            url:'/bot_api',
+            type:'POST',
+            headers:{"X-CSRFToken": $crf_token},
+            data:{
+                longitude: longitude,
+                hub_name: hub_name,
+                latitute: latitute,
+                address: address,
+                council: council,
+                state: state,
+                country: country
+            },
+            success:function(response){
+                document.getElementById("spinner").style.display = "none";
+                if(response.error == true){
+                    document.getElementById('server_message_error').innerHTML = response.message;
+                    document.getElementById("server_message_error").style.display = "block";
+                    setTimeout(function(){ 
+                        document.getElementById("server_message_error").style.display = "none"; 
+                    }, 6000);
+                }
+                else{
+                    document.getElementById('server_message_success').innerHTML = response.message;
+                    document.getElementById("server_message_success").style.display = "block";
+                    setTimeout(function(){ 
+                        document.getElementById("server_message_success").style.display = "none"; 
+                    }, 6000);
+                }
+                console.log(response);
+            },
+            error:function(e){
+                console.log(e);
+            },
+        });
+        
+        
+    });
+});
+
+</script>
+{% endblock %}

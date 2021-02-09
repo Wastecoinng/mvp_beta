@@ -1,0 +1,102 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <div class="dashboard-header" >
+        <!-- <p class="onboarding_header_h1">Profile</p> -->
+        <p class="onboarding_header_h1" style="font-weight:400"> <img src="{% static 'img/back.svg' %}" alt="back-logo" onclick="goBack();"/> Profile</p>
+        <!-- <div style="width: auto; display: flex; justify-content: space-between;">
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Contact Us</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div> -->
+
+    </div>
+    <div class="overlay_green"></div>
+    <div class="profile_card_board">
+        <div style="text-align: center;">
+            <img src="{% static 'img/prof_image.svg' %}" class="align-top" width="70%;" alt=" profile_icon">
+            <p  id="dashboard_p" style="color:#5D928B; text-align: center; margin-top:-10%; font-weight: 400; font-size:1.1rem;">{{data.user_details.first_name}} {{data.user_details.last_name}}</p>
+        </div>
+    </div>
+    <div class="profile_down_board" >
+        <div class="onboarding_form_div_transaction mb-1" style="margin-top:3rem; padding:0 2%;">
+            <label class="form_label_name ">Bio-data</label>
+            <label class="form_label_edit ">
+                <img src="{% static 'img/edit_.svg' %}" class="align-top img-fluid " alt=" profile_icon" data-toggle="modal" data-target="#bioModal">
+            </label>
+            <div class="profile_form_div mt-3 mb-1 ">
+                <label class="form_label_profile">Phone Number</label>
+                <p class="profile_p">{{data.user_details.phone_number}}</p>
+                <!-- <input type="text" value="{{data.user_details.phone_number}}"  class="onboarding_form_input" readonly> -->
+            </div>
+            <div class="profile_form_div mt-3 mb-1 ">
+                <label class="form_label_profile">Email</label>
+                <p class="profile_p">{{data.user_details.email}}</p>
+                <!-- <input type="text" value="{{data.user_details.email}}"  class="onboarding_form_input" readonly> -->
+            </div>
+            <div class="profile_form_div mt-3 mb-1 " style="border-bottom: 0;">
+                <label class="form_label_profile">Contact Address</label>
+                <p class="profile_p">{{data.user_details.address}}, {{data.user_details.council}}, {{data.user_details.state}}, {{data.user_details.country}}</p>
+                <!-- <input type="text" value="{{data.user_details.address}}, {{data.user_details.council}}, {{data.user_details.state}}, {{data.user_details.country}}"  class="onboarding_form_input" readonly> -->
+            </div>
+        </div>
+        <!-- <div class="onboarding_form_div_transaction mb-1" style="margin-top:1rem; padding:0 2%;">
+            <label class="form_label_name ">Payment Details</label>
+            <label class="form_label_edit ">
+                <img src="{% static 'img/edit_.svg' %}" class="align-top img-fluid " alt=" edit_icon" data-toggle="modal" data-target="#accountModal" >
+            </label>
+            <div class="profile_form_div mt-3 mb-1 ">
+                <label class="form_label_profile">Account Name</label>
+                <p class="profile_p">{{data.user_details.acc_name}}</p>
+               
+            </div>
+            <div class="profile_form_div mt-3 mb-1 ">
+                <label class="form_label_profile">Account Number</label>
+                <p class="profile_p">{{data.user_details.acc_number}}</p>
+               
+            </div>
+            <div class="profile_form_div mt-3 mb-1 " style="border-bottom: 0;">
+                <label class="form_label_profile">Bank</label>
+                <p class="profile_p">{{data.user_details.bank}}</p>
+                
+            </div>
+        </div> -->
+        <div class="onboarding_form_div_transaction mb-1" style="margin-top:1rem; padding:0 2%;">
+            <label class="form_label_name ">Security</label>
+            <label class="form_label_edit ">
+                <img src="{% static 'img/edit_.svg' %}" class="align-top img-fluid " alt="edit_icon" data-toggle="modal" data-target="#passwordModal">
+            </label>
+            <div class="profile_form_div mt-3 mb-1 " style="border-bottom: 0;">
+                <label class="form_label_profile">Password</label>
+                <p class="profile_p">************</p>
+                <!-- <input type="text" value="************"  class="onboarding_form_input" readonly> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<!-- <nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="#" data-toggle="modal" data-target="#marketModal">
+        <img src="{% static 'img/market.svg' %}" class="align-top img-fluid" alt=" more_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'notification' %}"> 
+        <img src="{% static 'img/notif.svg' %}" class="align-top img-fluid" alt=" notification_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/scanner.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+    </a>
+  </nav> -->
+{% endblock %}

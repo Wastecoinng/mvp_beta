@@ -1,0 +1,69 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <img src="{% static 'img/dashboard_bg.svg' %}" alt="dashboard-logo"  width = "100%"/>
+    {% if error == True %}
+    <div style="text-align: center;">
+        <img src="{% static 'img/404_error.svg' %}" width="60%" alt="error-logo"  class="mb-2 mt-1"/>
+    </div>
+    <p class="onboarding_header mb-1" style="text-align: center;">Oops! something went wrong</p>
+    {% else %}
+        
+    <div id="over-lay">
+        
+        <div class="row">
+            <div class="col-4">
+                <div class="flex-column">
+                    <img src="{% static 'img/ok.svg' %}" alt="ok-logo"  class="mb-5 mt-4"/>
+                </div>
+                <div class="flex-column">
+                    <img src="{% static 'img/foot_print.svg' %}" alt="carbon-foot-print-logo"  />
+                </div>
+            </div>
+            <div class="col-8" id="right-side">
+                <img src="{% static 'img/notification.svg' %}" alt="ok-logo"  /><span class="badge badge-dark">20</span>
+                <div class="flex-column">
+                    <p class="p-white mt-3">Well done ! {{user_details.firstname}}</p>
+                    <p class="p-white">You have saved</p>
+                    <p class="p-white-big">{{user_details.carbon_footprint|floatformat:2}}</p>
+                    <p class="p-white-small">kg CO<sub>2</sub></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-bottom">
+        <p class="onboarding_header">Recent Activities</p>
+        <div class="d-flex justify-content-around">
+            <div class="bottom-content"></div>
+            <div class="bottom-content"></div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff;">
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/barcode.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+        <p class="nav-p">Scanner</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'profile' %}"> 
+        <img src="{% static 'img/profile.svg' %}" class="align-top img-fluid" alt=" profile_icon">
+        <p class="nav-p">Profile</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <p class="nav-p">Home</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+        <p class="nav-p">Wallet</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'signout' %}">
+        <img src="{% static 'img/more.svg' %}" class="align-top img-fluid" alt=" more_icon">
+        <p class="nav-p">More</p>
+    </a>
+  </nav>
+{% endblock %}

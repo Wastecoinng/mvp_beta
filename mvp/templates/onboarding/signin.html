@@ -1,0 +1,41 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="sigin_div" >
+    <div class="overlay_green"></div>
+    <!-- <img src="{% static 'img/overlay_green.svg' %}" alt="company-logo"  width = "100%" class="overlay_geen"/> -->
+    <img src="{% static 'img/register_bg.svg' %}" alt="company-logo"  width = "100%"/>
+    <div class="overlay_register">
+        <p class="onboarding_header_h1 mb-3 mt-3">Sign in</p>
+        <!-- <p class="onboarding_header_h4 mb-1" >Sign in</p> -->
+        <p class="onboarding_header_h4 mb-1" >You are just two fields away!</p>
+    </div>
+    <div class="onboarding_register_div">
+        
+        {% if error == True %}
+            <div class="alert alert-danger" id="server_message" role="alert">{{message}}</div>
+        {% endif %}
+
+        <form class="onboarding_form mt-5" action="{% url 'signin_api' %}" id="sign_in_form" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="onboarding_form_div mb-3">
+                <label class="form_label">Email</label>
+                <input type="email" name="email" placeholder="johndoe@email.com"  class="onboarding_form_input" autocomplete="off">
+            </div>
+            <div class="onboarding_form_div mb-3">
+                <label class="form_label">Password</label>
+                <input type="password" name="password"  class="onboarding_form_input" autocomplete="off">
+            </div>
+            <p class="onboarding_footer mt-2 mb-1 text-left" style="font-size:0.8rem;">Forgot password? <span class="onboarding_span"><a href="{% url 'forgot_password' %}">Reset it</span></a></p>
+            <input type="submit" value="Sign in" class="onboarding_form_next mt-3" id="signin_submit">
+           
+        </form>
+        <p class="onboarding_footer mt-5 mb-5 text-center" style="font-size:0.8rem;">Don't have an account? <span class="onboarding_span"><a href="{% url 'signup_two' %}">Create account</span></a></p>
+        <p class="onboarding_footer mt-2 mb-1 text-center" style="font-size:0.8rem;">Click<span class="onboarding_span"><a href="{% url 'activate_account' %}"> Here </span></a> to activate your account</p>
+        
+    </div>
+</div>
+
+
+
+{% endblock %}

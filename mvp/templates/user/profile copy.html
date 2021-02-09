@@ -1,0 +1,113 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <img src="{% static 'img/others_bg.svg' %}" alt="others-bg-logo"  width = "100%"/>
+    {% if error == True %}
+    <div style="text-align: center;">
+        <img src="{% static 'img/404_error.svg' %}" width="60%" alt="error-logo"  class="mb-2 mt-1"/>
+    </div>
+    <p class="onboarding_header mb-1" style="text-align: center;">Oops! somethin went wrong</p>
+    <p class="onboarding_header mb-1" style="text-align: center;">{{message}}</p>
+    {% else %}
+    <div id="over-lay"> 
+        <div class="row">
+            <div class="col-7">
+                <div class="flex-column">
+                    <p class="p-white-big-top">Profile</p> 
+                </div>
+            </div>
+            <div class="col-5" id="right-side">
+                <img src="{% static 'img/notification.svg' %}" alt="ok-logo" /><span class="badge badge-dark">20</span>
+            </div>
+        </div>
+    </div>
+    <div class="profile-bottom">
+        <img src="{% static 'img/profile_image.svg' %}" alt="profile-logo" id="profile-img" />
+        <p class="p-dark-big">{{data.user_details.first_name}} {{data.user_details.last_name}}</p>
+        <div id="bio-data-table">
+            <!-- bio data row -->
+            <div class="profile-row">
+                <div style="padding: 1% 5% 0 5%;">
+                    <div class="d-flex justify-content-between" style="border-bottom: 1px solid rgba(196, 196, 196, 0.5);">
+                        <p style="margin-bottom:0.5rem; font-weight:700;">Bio Data</p>
+                        <!-- <img src="{% static 'img/edit.svg' %}" class="img-fluid" alt="edit-logo" /> -->
+                    </div>
+                </div>
+
+
+                <div class="d-flex justify-content-between">
+                    <div id="biodata-inner-left" class="col-5">
+                        <p class="profile-p">Email</p>
+                        <p class="profile-p">Phone </p>
+                        <p class="profile-p">Address</p>
+                    </div>
+                    <div id="profile-div-right" class="col-7">
+                        <p class="profile-pr">{{data.user_details.email}}</p>
+                        <p class="profile-pr">{{data.user_details.phone_number}}</p>
+                        <p class="profile-pr">{{data.user_details.address}}, {{data.user_details.council}}, {{data.user_details.state}}, {{data.user_details.country}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- acount details row -->
+            <div class="profile-row">
+                <div style="padding: 1% 5% 0 5%;">
+                    <div class="d-flex justify-content-between" style="border-bottom: 1px solid rgba(196, 196, 196, 0.5);">
+                        <p style="margin-bottom:0.5rem; font-weight:700;">Account Details</p>
+                        <img src="{% static 'img/edit.svg' %}" class="img-fluid" alt="edit-logo" data-toggle="modal" data-target="#accountModal" />
+                    </div>
+                </div>
+
+
+                <div class="d-flex justify-content-between">
+                    <div id="biodata-inner-left" class="col-5">
+                        <p class="profile-p">Acc Name</p>
+                        <p class="profile-p">Acc Number</p>
+                        <p class="profile-p">Bank Name</p>
+                    </div>
+                    <div id="profile-div-right" class="col-7">
+                        <p class="profile-pr">{{data.user_details.acc_name}}</p>
+                        <p class="profile-pr">{{data.user_details.acc_number}}</p>
+                        <p class="profile-pr">{{data.user_details.bank}}</p>
+                    </div>
+                </div>
+            </div>
+                <!-- security row -->
+            <div class="profile-row mb-5">
+                <div style="padding: 1% 5% 0 5%;">
+                    <div class="d-flex justify-content-between" style="border-bottom: 1px solid rgba(196, 196, 196, 0.5);">
+                        <p style="margin-bottom:0.5rem; font-weight:700;">Security</p>
+                        <img src="{% static 'img/edit.svg' %}" class="img-fluid" alt="edit-logo" data-toggle="modal" data-target="#passwordModal"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff;">
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/barcode.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+        <p class="nav-p">Scanner</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'profile' %}"> 
+        <img src="{% static 'img/profile.svg' %}" class="align-top img-fluid" alt=" profile_icon">
+        <p class="nav-p">Profile</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <p class="nav-p">Home</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+        <p class="nav-p">Wallet</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'signout' %}">
+        <img src="{% static 'img/more.svg' %}" class="align-top img-fluid" alt=" more_icon">
+        <p class="nav-p">More</p>
+    </a>
+  </nav>
+{% endblock %}

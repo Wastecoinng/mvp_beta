@@ -1,0 +1,91 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <div class="dashboard-header" >
+        <p class="onboarding_header_h1">Wallet</p>
+        <div style="width: auto; display: flex; justify-content: space-between;">
+            <a class="navbar-brand nav-style" href="{% url 'profile' %}"> <img src="{% static 'img/dash_prof.svg' %}" class="align-top img-fluid" alt=" scanner_icon" style="margin-top:-7%;"></a>
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Share Feedback</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div>
+    </div>
+    <div class="overlay_green"></div>
+    <p  id="dashboard_p">"The reward for a clean environment is <br>WasteCoins"</p>
+    {% if error == True %}
+    <div style="text-align: center;">
+        <img src="{% static 'img/404_error.svg' %}" width="60%" alt="error-logo"  class="mb-2 mt-1"/>
+    </div>
+    <p class="onboarding_header mb-1" style="text-align: center;">Oops! something went wrong</p>
+    {% else %}
+    <div class="card_board_wallet">
+        <img src="{% static 'img/currency_big.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <div style="width:200px;">
+            <p class="text-right p-small_inner">Wallet Balance</p>
+            <p class="onboarding_header_p_big text-right">{{user_details.balance|floatformat:2}}</p>
+            
+        </div>
+    </div>
+    <div class="down_board_wallet">
+        <!-- <p class="text-left p-small_inner">Bank details</p>
+        <img src="{% static 'img/wallet_card.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <div class="bank_details">
+            <p class="text-left p-small_bank">{{user_details.acc_name}}</p>
+            <p class="text-left p-small_bank">{{user_details.acc_number}}</p>
+            <p class="text-left p-small_bank">{{user_details.bank}}</p>
+        </div> -->
+        <div class="trans-div">
+            <div class="onboarding_form_div_transaction mt-1 pb-3" style="overflow: auto;">
+                <label class="form_label_transaction ">Wallet Activities</label>
+                {% if transaction %} 
+                {% for t in transaction %}
+                <div class="mt-2" style="display: flex; justify-content:space-between;">
+                    <div class="col-8">
+                        <p class="text-left p-small_inner">{{t.transaction_type}}</p>
+                        <p class="text-left p-small_inner" style="font-size:0.75rem; color:#303030;">{{t.date_added}}</p>
+                    </div>
+                    <div class="col-4">
+                        {% if t.transaction_type == "Credit" %}
+                        <p class="text-left p-small_inner" style="color: #2ED2BE;">{{t.amount|floatformat:2}}</p>
+                        {% endif %}
+                        {% if t.transaction_type == "Debit" %}
+                        <p class="text-left p-small_inner" style="color: #FF6060;">{{t.amount|floatformat:2}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %} 
+                {% else %}
+                <div class='p-small_inner' style="margin:0;padding:5%;">There is no transaction data for the account yet!</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<!-- <img src="{% static 'img/send_icon.svg' %}" class="align-top img-fluid" id="send_icon" alt="redeem-logo" data-toggle="modal" data-target="#redeemModal" > -->
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet_green.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/scanner.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'notification' %}"> 
+        <img src="{% static 'img/notif.svg' %}" class="align-top img-fluid" alt=" notification_icon">
+    </a>
+    
+    <a class="navbar-brand nav-style" href="#" data-toggle="modal" data-target="#marketModal">
+        <img src="{% static 'img/market.svg' %}" class="align-top img-fluid" alt=" more_icon">
+    </a>
+  </nav>
+{% endblock %}

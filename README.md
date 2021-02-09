@@ -1,0 +1,1 @@
+# wastecoin_mvp

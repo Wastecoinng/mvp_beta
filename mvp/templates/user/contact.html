@@ -1,0 +1,95 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+
+<div id="dashboard_div">
+    <div class="dashboard-header" >
+        <!-- <p class="onboarding_header_h1"> Contact Us</p> -->
+        <p class="onboarding_header_h1" style="font-weight:400"> <img src="{% static 'img/back.svg' %}" alt="back-logo" onclick="goBack();"/> Share Feedback</p>
+        <!-- <div style="width: auto; display: flex; justify-content: space-between;">
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Contact Us</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div> -->
+
+    </div>
+    <div class="overlay_green"></div>
+    <div class="contact_card_board" >
+        <div class="col-2" style="padding:1% 5%;">
+            <img src="{% static 'img/contact_loc.svg' %}" class="align-top img-fluid " alt=" home_icon">
+            <img src="{% static 'img/contact_call.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        </div>
+        <div class="col-10">
+            <p class="p-small " style="color: #5D928B; font-weight:500;font-family: Poppins; ">WasteCoin</p>
+            <p class=" p-small" style="color: #505050; font-weight:300; font-size: 0.8rem; font-family: Poppins;">080111111111</p>
+        </div>
+    </div>
+    <div class="profile_down_board" >
+        <form  action="#" id="contact_form" method="POST">{% csrf_token %}
+            <div class="onboarding_form_div_transaction mb-2" style="margin-top:4rem; padding:0 2%; border:1px solid transparent;">
+                <label class="form_label_name ">Message Us</label>
+                <div class="onboarding_form_div mt-4 mb-1 hide">
+                    <label class="form_label_contact">Full Name</label>
+                    <input type="text" value="{{data.user_details.first_name}} {{data.user_details.last_name}}"  class="onboarding_form_input" id="contact_name" readonly>
+                </div>
+                <div class="onboarding_form_div mt-3 mb-1 hide">
+                    <label class="form_label_contact">Email</label>
+                    <input type="text" value="{{data.user_details.email}}"  class="onboarding_form_input" readonly id="contact_email">
+                </div>
+                <div class="onboarding_form_div mt-3 mb-2 hide" >
+                    <label class="form_label_contact">Phone Number</label>
+                    <input type="text" value="{{data.user_details.phone_number}}"  class="onboarding_form_input" id="contact_phone" readonly>
+                </div>
+                <div class="onboarding_form_div mt-3 mb-2" >
+                    <label class="form_label_contact">Message</label>
+                    <textarea class="onboarding_form_input" style="height:100px;" id="contact_message"></textarea>
+                </div>
+                <div id="smileys" style="text-align: center;" class="hide">
+                    <label class="form_label_contac mb-2 text-center" style="font-size:0.8rem;">Kindly let us know what you think about the app</label>
+                    <input type="radio" name="smiley" value="unhappy" class="unhappy" id="unhappy">
+                    <input type="radio" name="smiley" value="neutral" class="neutral">
+                    <input type="radio" name="smiley" value="excited" class="excited">
+                </div>
+                <input type="text"  class="onboarding_form_input hide" id="rating">
+                <div class="" style="text-align: center;" >
+                    <label class="form_label_contac mb-2 text-center" style="font-size:0.8rem;">Kindly rate the Application</label>
+                    <div style="display: flex; justify-content: center;" class="pt-1">
+                        <span class="fa fa-star mr-2" id="star_one"></span>
+                        <span class="fa fa-star mr-2" id="star_two"></span>
+                        <span class="fa fa-star mr-2" id="star_three"></span>
+                        <span class="fa fa-star mr-2" id="star_four"></span>
+                        <span class="fa fa-star" id="star_five"></span>
+                    </div>
+                </div>
+                
+                <input type="submit" value="Send Message" class="onboarding_form_scan mt-2 mb-1" id="contact_submit">
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<!-- <nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="#" data-toggle="modal" data-target="#marketModal">
+        <img src="{% static 'img/market.svg' %}" class="align-top img-fluid" alt=" more_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'notification' %}"> 
+        <img src="{% static 'img/notif.svg' %}" class="align-top img-fluid" alt=" notification_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/scanner.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+    </a>
+  </nav> -->
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <img src="{% static 'img/wallet_bg.svg' %}" alt="wallet-bg-logo"  width = "100%"/>
+    {% if error == True %}
+    <div style="text-align: center;">
+        <img src="{% static 'img/404_error.svg' %}" width="60%" alt="error-logo"  class="mb-2 mt-1"/>
+    </div>
+    <p class="onboarding_header mb-1" style="text-align: center;">Oops! something went wrong</p>
+    {% else %}
+        
+    <div id="over-lay"> 
+        <div class="row">
+            <div class="col-7">
+                <div class="flex-column">
+                    <p class="p-white mt-4">Wallet Balance</p> 
+                </div>
+                <div class="flex-column">
+                    <p class="p-white-big"><img src="{% static 'img/currency.svg' %}" class="img-fluid mr-1" alt="ok-logo" />{{user_details.balance|floatformat:2}}</p>
+                </div>
+            </div>
+            <div class="col-5" id="right-side">
+                <img src="{% static 'img/notification.svg' %}" alt="ok-logo" /><span class="badge badge-dark">20</span>
+                <div class="text-center mt-3">
+                    <p class="p-white-small text-center">Redeem Coins</p>
+                    <img src="{% static 'img/redeem.svg' %}" class="img-fluid" alt="redeem-logo" data-toggle="modal" data-target="#redeemModal" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wallet-bottom">
+        <p class="onboarding_header">Recent Transactions</p>
+        {% if transaction %} 
+            
+        <div id="transaction-table">
+            {% for t in transaction %}
+            <div class="transaction-row">
+                <div class="d-flex justify-content-around">
+                    <div id="currency-div" class="col-7">
+                        <p class="p-dark-big"><img src="{% static 'img/currency.svg' %}" class="img-fluid mr-1" alt="ok-logo" />{{t.amount|floatformat:2}}</p>
+                    </div>
+                    <div id="note-div" class="col-5">
+                        <p id="note-p">{{t.transaction_type}}</p>
+                        <p id="note-date">{{t.date_added}}</p>
+                    </div>
+                    
+                </div>
+            </div>
+            {% endfor %} 
+        </div>
+        {% else %}
+                <div class='onboarding_header' style="margin-top:50px;">There is no transaction data for the account yet!</div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff;">
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/barcode.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+        <p class="nav-p">Scanner</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'profile' %}"> 
+        <img src="{% static 'img/profile.svg' %}" class="align-top img-fluid" alt=" profile_icon">
+        <p class="nav-p">Profile</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <p class="nav-p">Home</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+        <p class="nav-p">Wallet</p>
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'signout' %}">
+        <img src="{% static 'img/more.svg' %}" class="align-top img-fluid" alt=" more_icon">
+        <p class="nav-p">More</p>
+    </a>
+  </nav>
+{% endblock %}

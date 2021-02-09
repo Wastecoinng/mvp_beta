@@ -1,0 +1,88 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    <div class="dashboard-header" >
+        <p class="onboarding_header_h1" style="font-weight:400"> <img src="{% static 'img/back.svg' %}" alt="back-logo" onclick="goBack();"/> FAQ</p>
+        <!-- <div style="width: auto; display: flex; justify-content: space-between;">
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Contact Us</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div> -->
+
+    </div>
+    <div class="overlay_green"></div>
+    <div class="fa_card_board" >
+        <p class="p-small " style="color: #5D928B; font-weight:500;font-family: Poppins; font-size:0.85rem; ">Some frequently asked questions </p> 
+    </div>
+    <div class="profile_down_board" >
+        <div id="accordion" class="mt-3" >
+            <div class="card mb-2">
+              <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" style="background-color: #F0F0F0;">
+                <p class=" p-small" style="color: #303030; font-weight:350; font-size: 0.85rem; font-family: Poppins;">What is WasteCoin?</p>
+              </div>
+          
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <p class=" p-small" style="color: #505050; font-weight:300; font-size: 0.75rem; font-family: Poppins;">
+                    Wastecoin is a waste currency just like Bitcoin that can be mined via this app. It is simply the reward for a good waste disposal habit.This reward can be exchanged for cash and other incentives. 
+                    </p>
+                </div>
+              </div>
+            </div>
+            <div class="card mb-2">
+              <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" style="background-color: #F0F0F0;">
+                <p class=" p-small" style="color: #303030; font-weight:350; font-size: 0.85rem; font-family: Poppins;">How can i mine WasteCoins?</p>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <p class=" p-small" style="color: #505050; font-weight:300; font-size: 0.75rem; font-family: Poppins;">
+                        Wastecoin is a waste currency just like Bitcoin that can be mined via this app. It is simply the reward for a good waste disposal habit.This reward can be exchanged for cash and other incentives. 
+                    </p>
+                </div>
+              </div>
+            </div>
+            <div class="card mb-2">
+              <div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" style="background-color: #F0F0F0;">
+                <p class=" p-small" style="color: #303030; font-weight:350; font-size: 0.85rem; font-family: Poppins;">How do I redeem my coins?</p>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="card-body">
+                    <p class=" p-small" style="color: #505050; font-weight:300; font-size: 0.75rem; font-family: Poppins;">
+                        Wastecoin is a waste currency just like Bitcoin that can be mined via this app. It is simply the reward for a good waste disposal habit.This reward can be exchanged for cash and other incentives. 
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+<!-- <script>
+  function goBack() {
+    window.history.back();
+  }
+  </script> -->
+<!-- MENU BAR BEGINS-->
+<!-- <nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="#" data-toggle="modal" data-target="#marketModal">
+        <img src="{% static 'img/market.svg' %}" class="align-top img-fluid" alt=" more_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'notification' %}"> 
+        <img src="{% static 'img/notif.svg' %}" class="align-top img-fluid" alt=" notification_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/scanner.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+    </a>
+  </nav> -->
+{% endblock %}

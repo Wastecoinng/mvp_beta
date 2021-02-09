@@ -1,0 +1,1 @@
+web: gunicorn wastecoin.wsgi --log-file -

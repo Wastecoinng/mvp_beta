@@ -1,0 +1,11 @@
+{% autoescape off %}
+<!-- Hi {{user}}!,
+Please click on the link to confirm your registration,
+http://{{domain}}{% url 'activate' otp_code=otp%} -->
+
+<div id="splashscreen" style="background: linear-gradient(166.41deg, #14F0C8 30.11%, rgba(48, 193, 176, 0.9) 93.7%); padding:15%;">
+	<p class="onboarding_footer mt-2 mb-1 text-center" style="font-size:1.5rem; font-style: normal;font-weight: 500; color:#fff;">Hi {{user}}! Kindly click on the link below to activate your WasteCoin Account</p>
+	<a href="http://{{domain}}{% url 'activate' otp_code=otp%}"> <input type="button" value="Activate Account"  style="border:1px solid #fff; border-radius:30px;background: linear-gradient(180.38deg, #14F0C8 88.39%, rgba(48, 193, 176, 0.9) 96.02%); width: 100%; color: #fff; font-family: Poppins; height: 40px;"></a>
+</div>
+{% endautoescape %}
+

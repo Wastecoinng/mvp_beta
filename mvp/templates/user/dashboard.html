@@ -1,0 +1,57 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    
+    <div class="dashboard-header" >
+        <p class="onboarding_header_h1">Home</p>
+        <div style="width: auto; display: flex; justify-content: space-between;">
+            <a class="navbar-brand nav-style" href="{% url 'profile' %}"> <img src="{% static 'img/dash_prof.svg' %}" class="align-top img-fluid" alt=" scanner_icon" style="margin-top:-7%;"></a>
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Share Feedback</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div>
+    
+    </div>
+    <div class="overlay_green">
+        <p  id="dashboard_p">Hello {{user_details.firstname}}! Welcome back</p>
+    </div>
+    <!-- <p  id="dashboard_p">Hello {{user_details.firstname}}! Welcome back</p> -->
+    <div class="card_board">
+        <img src="{% static 'img/eco.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <div>
+            <p class="text-right p-small">You have saved</p>
+            <p class="onboarding_header_p_big text-right">{{user_details.carbon_footprint|floatformat:2}}</p>
+            <p class="text-right p-small" style="margin-top:-6%;">kg CO<sub>2</sub></p>
+        </div>
+    </div>
+    <div class="down_board">
+
+    </div>
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'home' %}" >
+        <img src="{% static 'img/home_new_green.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'wallet' %}">
+        <img src="{% static 'img/wallet.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'scanner' %}">
+        <img src="{% static 'img/scanner.svg' %}" class="align-top img-fluid" alt=" scanner_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'notification' %}"> 
+        <img src="{% static 'img/notif.svg' %}" class="align-top img-fluid" alt=" notification_icon">
+    </a>
+    
+    <a class="navbar-brand nav-style" href="#" data-toggle="modal" data-target="#marketModal">
+        <img src="{% static 'img/market.svg' %}" class="align-top img-fluid" alt=" more_icon">
+    </a>
+</nav>
+{% endblock %}

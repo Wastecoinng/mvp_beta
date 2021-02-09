@@ -1,0 +1,19 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="splashscreen" style="background: linear-gradient(166.41deg, #14F0C8 30.11%, rgba(48, 193, 176, 0.9) 93.7%); padding:15%;">
+	<!-- <img src="{% static 'img/bg_splash_main.svg' %}" alt="company-logo"  width = "100%" class="mt-5 mb-5"/> -->
+	<!-- <img src="{% static 'img/bg_splash.svg' %}" alt="company-logo"  width = "100%"/> -->
+
+    {% if error == True %}
+            <p class="onboarding_footer mt-2 mb-1 text-center text-danger" style="font-size:0.75rem;">{{message}}</p>
+            <img src="{% static 'img/bg_splash.svg' %}" alt="company-logo"  width = "100%" class="mt-5 mb-5"/>
+            
+    {% endif %}
+    {% if error == False %}
+            <p class="onboarding_footer mt-2 mb-1 text-center" style="font-size:0.75rem;">{{message}}</p>
+            <img src="{% static 'img/bg_splash.svg' %}" alt="company-logo"  width = "100%"/> 
+    {% endif %}
+	
+</div>
+{% endblock %}

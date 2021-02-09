@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="WasteCoin is a mobile application that helps to Convert everyone’s household recycling efforts into a currency that can be redeemed on the app marketplace "
+    />
+    {% load static %}
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="{% static 'bootstrap-4.5.2/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">  
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">  
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+    <link rel="shortcut icon" href="{% static 'img/favicon.svg' %}" />
+
+     <!-- GOOGLE FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <!-- JS FILES -->
+    <script src="{% static 'js/jquery-3.1.1.js' %}"></script>
+    <script src="{% static 'bootstrap-4.5.2/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/api_calls.js' %}"></script>
+
+    <!-- SCANNER JS FILES -->
+    <script src="//webrtc.github.io/adapter/adapter-latest.js" type="text/javascript"></script>
+    <script src="{% static 'js/scanner/quagga.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/scanner/scanner.js' %}" type="text/javascript"></script>
+    
+    <title>WasteCoin</title>
+</head>
+<body>      
+    {% block body%}
+    {% endblock %}
+    <div id="spinner"></div> 
+    {% block javascript%}
+    <script>
+        $(document).ready(function(){
+            $("#form-part-two").hide();
+            $("#signup_next").click(function(){
+            let password = document.getElementById("password").value;
+            let confirm_password = document.getElementById("confirm_password").value;
+              if (password != confirm_password){
+                  document.getElementById("message").style.display = "block";
+                  document.getElementById('sign_in_form').reset();
+              }
+              else{
+                $("#form-part-one").hide();
+                $("#form-part-two").show();
+              }
+                
+            });
+            $("#back_signup").click(function(){
+                $("#form-part-one").show();
+                document.getElementById("server_message_success").style.display = "none";
+                document.getElementById("server_message_error").style.display = "none";
+                $("#form-part-two").hide();
+                
+            });
+        });
+
+        $(document).ready(function() {
+            var message_ele = document.getElementById("server_message"); 
+            setTimeout(function(){ 
+                message_ele.style.display = "none"; 
+            }, 3000);
+        });
+
+        $(document).ready(function(){
+          getLocation();
+          var array_location = [
+            { "name": "Chanja Datti Lugbe Hub", "lat": 8.9768159, "long": 7.370395, "address": "Berger yard, Lugbe, Abuja", "phone": "08011111111" , "state": "Abuja", "council":"AMAC", "country": "Nigeria"}, 
+            { "name": "Chanja Datti Gwawalada Hub", "lat": 8.9542665, "long": 7.067491 , "address": "Phase 3 by Waterboard, Gwagwalada, Abuja", "phone": "08011112222", "state": "Abuja", "council":"Gwagwalada", "country": "Nigeria"},
+            { "name": "Chanja Datti Bwari Hub", "lat": 9.2918274, "long": 7.3824383 , "address": "Living Faith road, Bwari, Abuja", "phone": "08011113333" , "state": "Abuja", "council":"Bwari", "country": "Nigeria"},
+            { "name": "Waste Africa Kuje Hub", "lat": 8.883332, "long": 7.2336134 , "address": "Stadium complex, Kuje, Abuja","phone": "08011114444" , "state": "Abuja", "council":"Kuje", "country": "Nigeria"},
+            { "name": "Chanja Datti Garki Hub", "lat": 9.0185342, "long": 7.4951687 , "address": "Garki,  Abuja", "phone": "08011115555" , "state": "Abuja", "council":"AMAC", "country": "Nigeria"},
+            { "name": "Chanja Datti Zuba Hub", "lat": 9.0930836, "long": 7.2169195 , "address": "Zuba section 8,  Abuja", "phone": "08011116666" , "state": "Abuja", "council":"Gwagwalada", "country": "Nigeria"},
+          ];
+          function getLocation() {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+              $("#scan_distance").html("Sorry! we could not get your location")
+            }
+          }
+          function showPosition(position) {
+            let position_long = position.coords.longitude;
+            let position_lat = position.coords.latitude;
+            let currentDistance = [];
+            for (let i = 0; i < array_location.length; i++) {
+                let initialDistance =0;
+                var distanc = distanceBetween(position_lat, position_long, array_location[i].lat, array_location[i].long,array_location[i].name, array_location[i].address,array_location[i].phone, array_location[i].state,array_location[i].council,array_location[i].country,"K");
+                currentDistance.push(distanc);
+
+              }
+              currentDistance.sort(function (a, b)
+              {
+                  return a[2] - b[2];
+              });
+
+            console.log(currentDistance);
+            $('#hub_name').val(currentDistance[0][0]);
+            $('#hub_address').val(currentDistance[0][1]);
+            $('#hub_state').val(currentDistance[0][4]);
+            $('#hub_council').val(currentDistance[0][5]);
+            $('#hub_country').val(currentDistance[0][6]);
+            console.log("min hub: " + currentDistance[0][0]);
+            console.log("min address: " + currentDistance[0][1]);
+            console.log("min dis: " + currentDistance[0][2]);
+            console.log("min state: " + currentDistance[0][4]);
+            console.log("min council: " + currentDistance[0][5]);
+            console.log("min country: " + currentDistance[0][6]);
+          
+            $("#scan_distance").html(currentDistance[0][0] +", "+currentDistance[0][1]);
+            $("#scan_phone").html(currentDistance[0][3]);
+          }
+
+          function distanceBetween(lat1, lon1, lat2, lon2, hub, address,phone,state,council,country, unit) {
+            var rlat1 = Math.PI * lat1 / 180
+            var rlat2 = Math.PI * lat2 / 180
+            var rlon1 = Math.PI * lon1 / 180
+            var rlon2 = Math.PI * lon2 / 180
+            var theta = lon1 - lon2
+            var rtheta = Math.PI * theta / 180
+            var dist = Math.sin(rlat1) * Math.sin(rlat2) + Math.cos(rlat1) * Math.cos(rlat2) * Math.cos(rtheta);
+            dist = Math.acos(dist)
+            dist = dist * 180 / Math.PI
+            dist = dist * 60 * 1.1515
+            if (unit == "K") {
+                dist = dist * 1.609344
+            }
+            if (unit == "N") {
+                dist = dist * 0.8684
+            }
+
+            let dis = Math.ceil(dist);
+            return [hub, address, dis, phone,state,council,country];
+          }
+
+        });
+
+    </script>
+    {% endblock %}
+    <!-- MODALS  -->
+    <!-- Account update modal -->
+    <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:35vh;">
+          <div class="modal-content">
+            <div class="modal-header" style="padding:1rem 1rem 0 0; border:0;">
+              <button type="button" class="close"  aria-label="Close" id="close-password">
+                <a href="{% url 'profile' %}"> <span aria-hidden="true" class="span-y" style="color: #92D4CA;">&times;</span></a>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class='text-center ' id="modal_message_account"></div>
+                <form class="onboarding_form" action="#" method="PUT" id="account-modal-form">
+                  {% csrf_token %}
+                    <label class="modal_label">Account Name</label>
+                    <input type="text" id="account_name" placeholder="Account Name" class="modal_form_input mb-2">
+                    <label class="modal_label">Account Number</label>
+                    <input type="text" id="account_number" placeholder="Account Number" class="modal_form_input mb-2">
+                    <label class="modal_label">Bank</label>
+                    <input type="text" id="bank" placeholder="Bank" class="modal_form_input mb-3">
+                    <input type="submit" value="Save" class="modal_form_submit mt-1"  id="account_modal_submit">
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Password update modal -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:35vh;">
+          <div class="modal-content">
+            <div class="modal-header" style="padding:1rem 1rem 0 0; border:0;">
+              <button type="button" class="close"  aria-label="Close">
+                <a href="{% url 'profile' %}"> <span aria-hidden="true" class="span-y" style="color: #92D4CA;">&times;</span></a>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class='text-center text-success' id="modal_message_password"></div>
+                <form class="onboarding_form" action="#"  method="POST" id="form-edit-password">
+                  {% csrf_token %}
+                    <label class="modal_label">Old Password</label>
+                    <input type="password" id="update_old_password" placeholder="Old Password" class="modal_form_input mb-2">
+                    <label class="modal_label">New Password</label>
+                    <input type="password" id="update_new_password" placeholder="New Password" class="modal_form_input mb-2">
+                    <label class="modal_label">Confirm New Password</label>
+                    <p id="password_confirm" class="text-danger"></p>
+                    <input type="password" id="update_confirm_new_password" placeholder="Confirm New Password" class="modal_form_input mb-3">
+                    <input type="submit" value="Save" class="modal_form_submit mt-1" id="password_modal_submit">
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Redeem update modal -->
+    <div class="modal fade" id="redeemModal" tabindex="-1" aria-labelledby="redeemModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="margin-top:35vh;">
+          <div class="modal-content">
+            <div class="modal-header" style="padding:1rem 1rem 0 0; border:0;">
+              <button type="button" class="close"  aria-label="Close">
+                <a href="{% url 'wallet' %}"> <span aria-hidden="true" class="span-y" style="color: #92D4CA;">&times;</span></a>
+              </button>
+            </div>
+            <div class="modal-body">
+              Sorry, this feature has not been developed. Kindly use the Marketplace. Thanks
+                <!-- <form class="onboarding_form" action=""  method="POST">
+                  {% csrf_token %}
+                    <label class="modal_label">Amount</label>
+                    <input type="text" name="amount" id="amount" placeholder="123" class="modal_form_input mb-2" oninput="amountCalculation();">
+                    <label class="modal_label">Cash Equivalent</label>
+                    <input type="text" name="cash_equivalent" id="cash_equivalent" class="modal_form_input mb-2">
+                    <input type="submit" value="Redeem Coins" class="modal_form_submit mt-1" >
+                </form> -->
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- scan result modal -->
+    <div class="modal fade" id="scanModal" tabindex="-1" aria-labelledby="scanModalLabel" aria-hidden="true">
+      <div class="modal-dialog" >
+        <div class="modal-content">
+          <div class="modal-header" style="padding:1rem 1rem 0 0; border:0;">
+            <button type="button" class="close "  aria-label="Close" >
+              <a href="{% url 'scanner' %}"> <span aria-hidden="true" class="span-y" style="color: #92D4CA;">&times;</span></a>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="text-center"><img src="{% static 'img/success.svg' %}" alt="ok-logo"  width = "40%"/></div>
+            <p class="onboarding_header" id="scan_head"></p> 
+            <p class="onboarding_header" id="scan_manufacturer"></p> 
+            <p class="onboarding_header" id="scan_result"></p>
+            <p style="color: #A6177E;">Kindly locate the nearest Hub to your current location </p> 
+            <div class="row">
+              <div class="col-3">
+                <img src="{% static 'img/location.svg' %}" alt="ok-logo"  width = "35%"/>
+              </div>
+              <div class="col-9">
+                <p style="color: #F93972;" id="scan_distance1">Current location</p> 
+                <p style="color: #14F0C8;" id="scan_distance"></p> 
+                <p class="onboarding_header" id="scan_phone"></p> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- scan result manufacturer details modal -->
+  <div class="modal fade" id="scanFormModal" tabindex="-1" aria-labelledby="scanFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top:35vh;">
+      <div class="modal-content">
+        <div class="modal-header" style="padding:1rem 1rem 0 0; border:0;">
+          <button type="button" class="close close-scanner-form"  aria-label="Close" >
+            <a href="{% url 'scanner' %}"><span aria-hidden="true" class="span-y" style="color: #92D4CA;">&times;</span></a>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="onboarding_header" id="scan_result_manufacturer"></p> 
+          <form class="onboarding_form" action=""  method="POST" style="background: #007bff24; padding: 2%;">
+            {% csrf_token %}
+            <!-- <label class="modal_label">Brand Label</label> -->
+            <input type="text" name="brand" id="brand" placeholder="Enter Brand name here" class="modal_form_input mb-2" >
+            <input type="text" name="brand_code" id="brand_code" class="modal_form_input mb-2" hidden>
+            <input type="submit" value="Submit" class="modal_form_submit mt-3" id="brand_submit">
+        </form>
+        <!-- <a href="{% url 'scanner' %}"><input type="submit" value="Scan Again" class="modal_form_submit mt-5" ></a> -->
+        </div>
+      </div>
+    </div>
+</div>
+</body>
+<script>
+    function amountCalculation(){
+        let unit_cost = 0.3;
+        let amount = document.getElementById("amount").value;
+        total_amount = amount*unit_cost;
+        formated_amount = formatter.format(total_amount);
+        document.getElementById("cash_equivalent").value= formated_amount;
+    }
+
+    var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'NGN',
+    });
+</script>
+</html>
