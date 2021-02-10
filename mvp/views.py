@@ -5,7 +5,7 @@ import requests
 import jwt
 # from django.db.models import Q
 from django.core.files.storage import FileSystemStorage
-from mvp.models import (User,otp, HubLocation, EmailCollector,Notification, Transaction, RecycledItems, Manufacturer,BrandCollector)
+from mvp.models import (User,otp, HubLocation, EmailCollector,Notification, Transaction, RecycledItems, Manufacturer,BrandCollector, Hub_User)
 from CustomCode import (autentication,  password_functions,
                         string_generator, validator, barcode)
 from django.db.models import Sum
@@ -392,10 +392,19 @@ def signin_api(request):
             validate_mail = validator.checkmail(email)
             if validate_mail == True:
                 if User.objects.filter(email =email).exists() == False:
-                    return_data = {
-                        "error": True,
-                        "message": "User does not exist"
-                    }
+                    hub_data = Hub_User.objects.get(email=email, hub_password=password)
+                    request.session['user_id'] = hub_data.email
+                    if hub_data:
+                        return_data = {
+                        "error": False,
+                        "data": hub_data
+                        }
+                        return render(request,"user/hub_dashboard.html", return_data)
+                    else:
+                        return_data = {
+                            "error": True,
+                            "message": "User does not exist"
+                        }
                 else:
                     user_data = User.objects.get(email=email)
                     is_valid_password = password_functions.check_password_match(password,user_data.user_password)
@@ -439,9 +448,9 @@ def signin_api(request):
                         }
             else:
                 return_data = {
-                    "error": True,
-                    "message": "Email is Invalid"
-                }
+                        "error": True,
+                        "message": "Email is Invalid"
+                    }                    
         else:
             return_data = {
                 "error" : True,
@@ -453,6 +462,30 @@ def signin_api(request):
             "message": str(e)
         }
     return render(request,"onboarding/signin.html", return_data)
+
+@api_view(["GET"])
+def hub_dashboard(request):
+    try:
+        user_id = request.session['user_id']
+        if user_id != None and user_id != '':
+            #get user info
+            hub_data = Hub_User.objects.get(email=user_id)
+            # footprint = user_data.minedCoins*0.03
+            return_data = {
+                "error": False,
+                "data": hub_data,
+            }
+        else:
+            return_data = {
+                "error": True,
+                "message": "Invalid Parameter"
+            }
+    except Exception as e:
+        return_data = {
+            "error": True,
+            "message": str(e)
+        }
+    return render(request,"user/hub_dashboard.html", return_data)
 
 @api_view(["GET"])
 def dashboard(request):
@@ -886,9 +919,14 @@ def send_coins_no_filter(request):
                 pay_user = Transaction(user=user_data, amount=barcode_coin,transaction_type="Credit")
                 pay_user.save()
 
+                # add to total recycled count
+                recycledtotal = user_data.totalRecyled+1
+                deliveredtotal = user_data.totalDelivered
                 # credit user wallet
                 user_balance = user_data.minedCoins + barcode_coin
                 user_data.minedCoins = user_balance
+                user_data.totalRecyled = recycledtotal
+                user_data.totalNotDelivered =user_data.totalRecyled - deliveredtotal
                 user_data.save()
                 #Save new_barcode
                 new_barcode = RecycledItems(user=user_data, item_manufacturer=barcode_manufacturer,hub=hub_name, item_barcode=bar_code,hub_address=hub_address,hub_state=hub_state,hub_council_area=hub_council,hub_country=hub_country)
@@ -984,6 +1022,101 @@ def contact_api(request):
                 "error": True,
                 "showForm": False,
                 "message": "sorry, the message field was empty. Please try again!"
+            }
+    except Exception as e:
+        return_data = {
+                "error": True,
+                "showForm": False,
+                "message": str(e)
+                # "message":"Something went wrong!"
+        }
+    return Response(return_data)
+
+# Hub collection confirmation api
+@api_view(["POST"])
+def hub_confirmation(request):
+    try:
+        phone_number = request.data.get("phone_number",None)
+        field = [phone_number]
+        if not None in field and not "" in field:
+            user_data = User.objects.get(user_phone=phone_number)
+            
+            if user_data:
+                # unreadMessages = Notification.objects.filter(reciever=user_details.email, beenRead ="No").count()
+                delivered = user_data.totalDelivered
+                recycled = user_data.totalRecyled
+                not_delivered = user_data.totalNotDelivered
+                # delivered = RecycledItems.objects.filter(user__user_phone=phone_number,collected=True).count()
+                # not_delivered = RecycledItems.objects.filter(user__user_phone=phone_number,collected=False).count()
+                return_data = {
+                "error": False,
+                "showForm": True,
+                "user_name": user_data.firstname+" "+ user_data.lastname,
+                "delivered": delivered,
+                "recycled": recycled,
+                "not_delivered": not_delivered,
+            }     
+        else:
+            return_data = {
+                "error": True,
+                "showForm": False,
+                "message": "sorry, the user does not exist!"
+            }
+    except Exception as e:
+        return_data = {
+                "error": True,
+                "showForm": False,
+                "message": str(e)
+                # "message":"Something went wrong!"
+        }
+    return Response(return_data)
+
+# Hub collection confirmation of collected pet pottles from user api
+@api_view(["POST"])
+def confirmation_api(request):
+    try:
+        recycled_total = request.data.get("to_deliver",None)
+        phone_number = request.data.get("phone_number",None)
+        hub_email = request.data.get("hub_email",None)
+        field = [phone_number, recycled_total, hub_email]
+        if not None in field and not "" in field:
+            user_data = User.objects.get(user_phone=phone_number)
+            hub_data = Hub_User.objects.get(email=hub_email)
+            if user_data:
+                delivered = user_data.totalDelivered
+                recycled = user_data.totalRecyled
+                not_delivered = user_data.totalNotDelivered
+                if int(recycled_total) <= not_delivered:
+                    user_delievered = delivered + int(recycled_total)
+                    
+                    user_not_delivered = recycled - user_delievered
+
+                    hub_collection  = hub_data.total_items_collected + int(recycled_total)
+                    hub_data.total_items_collected = hub_collection
+                    hub_data.save()
+                    user_data.totalDelivered = user_delievered
+                    user_data.totalNotDelivered = user_not_delivered
+                    # user_data.totalNotDelivered =user_data.totalRecyled - deliveredtotal
+                    user_data.save()
+                    return_data = {
+                    "error": False,
+                    "showForm": True,
+                    # "not_collected": not_collected,
+                    "message": str(recycled_total)+" pieces recycled successfully!" 
+                    } 
+                else:
+
+                    return_data = {
+                    "error": True,
+                    "showForm": False,
+                    # "not_collected": not_collected,
+                    "message": "Sorry! you entered exceeded value" 
+                    }     
+        else:
+            return_data = {
+                "error": True,
+                "showForm": False,
+                "message": "sorry, one or more data field is empty"
             }
     except Exception as e:
         return_data = {

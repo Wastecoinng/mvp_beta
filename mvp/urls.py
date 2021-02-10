@@ -23,6 +23,7 @@ urlpatterns = [
     path('faq', views.faq, name='faq'),
     path('signout', views.signout, name='signout'),
     path('home', views.dashboard, name='home'),
+    path('hub_home', views.hub_dashboard, name='hub_home'),
     path('wallet', views.wallet, name='wallet'),
     path('profile', views.profile, name='profile'),
     path('notification', views.notification, name='notification'),
@@ -34,6 +35,8 @@ urlpatterns = [
 
     # APIS
     path('signup_api', views.signup_api, name='signup_api'),
+    path('hub_confirmation', views.hub_confirmation, name='hub_confirmation'),
+    path('confirmation_api', views.confirmation_api, name='confirmation_api'),
     path('signin_api', views.signin_api, name='signin_api'),
     path('update_account', views.update_account, name='update_account'),
     path('contact_api', views.contact_api, name='contact_api'),
