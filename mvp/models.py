@@ -17,6 +17,9 @@ class User(models.Model):
     user_council_area = models.TextField(max_length=200,verbose_name="LGA/Council Area")
     user_country = models.TextField(max_length=200,verbose_name="Country")
     minedCoins = models.FloatField(verbose_name="minedCoins",default=0)
+    totalRecyled = models.IntegerField(verbose_name="Total plastics recycled",default=100)
+    totalDelivered = models.IntegerField(verbose_name="Total plastics Delivered",default=0)
+    totalNotDelivered = models.IntegerField(verbose_name="Total plastics not Delivered",default=0)
     # newly added
     account_name = models.TextField(max_length=150,verbose_name="Account Name",default="Null")
     account_number = models.TextField(max_length=150,verbose_name="Account Number",default="Null")
@@ -24,6 +27,25 @@ class User(models.Model):
     date_added = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return f"{self.user_id} - {self.firstname} - {self.lastname} - {self.email} - {self.user_phone} - {self.user_address}- {self.user_state} - {self.user_council_area} - {self.user_country} - {self.date_added} - {self.account_name} - {self.account_number} - {self.bank_name} - {self.minedCoins}"
+
+# HUB AGENTS
+class Hub_User(models.Model):
+    class Meta:
+        db_table = "hub_user_table"
+    hub_id = models.CharField(max_length=500,unique=True)
+    firstname = models.CharField(max_length=30,verbose_name="Firstname",blank=True)
+    lastname = models.CharField(max_length=30,verbose_name="Lastname",blank=True)
+    hub_phone = models.TextField(max_length=15, unique=True, null=True, verbose_name="Telephone number")
+    email = models.EmailField(max_length=90, unique=True,verbose_name="Email")
+    hub_password = models.TextField(max_length=200,verbose_name="Password")
+    hub_address = models.TextField(max_length=200,verbose_name="Address")
+    hub_state = models.TextField(max_length=200,verbose_name="State")
+    hub_council_area = models.TextField(max_length=200,verbose_name="LGA/Council Area")
+    hub_country = models.TextField(max_length=200,verbose_name="Country")
+    total_items_collected = models.FloatField(verbose_name="Total Plastics collected",default=0)
+    date_added = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f"{self.hub_id} - {self.firstname} - {self.lastname} - {self.email} - {self.hub_phone} - {self.hub_address}- {self.hub_state} - {self.hub_council_area} - {self.hub_country} - {self.date_added} - {self.total_items_collected}"
 
 class otp(models.Model):
     class Meta:
@@ -81,7 +103,7 @@ class RecycledItems(models.Model):
     date_added_with_time = models.DateTimeField(default=timezone.now)
     date_added = models.DateField(default=datetime.date.today)
     def __str__(self):
-        return f"{self.user} - {self.item_manufacturer} - {self.item_barcode} - {self.hub} - {self.hub_address} - {self.hub_state}- {self.date_added}"
+        return f"{self.user} - {self.item_manufacturer} - {self.item_barcode} - {self.hub} -{self.collected} -{self.paid} - {self.date_added}"
 
 class Manufacturer(models.Model):
     class Meta:

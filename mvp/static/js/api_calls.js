@@ -350,3 +350,55 @@ $(function(){
         
     });
 });
+// COllection confirmation US API
+$(function(){
+    $('#confirmation_submit').on('click', function (e) {
+        e.preventDefault();
+        let to_deliver = document.getElementById("r-to-deliver").value;
+        let phone_number = document.getElementById("ajax_phone_number").value;
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        document.getElementById("spinner").style.display = "block";
+        $.ajax({
+            url:'/confirmation_api',
+            type:'POST',
+            headers:{"X-CSRFToken": $crf_token},
+            data:{
+                to_deliver: to_deliver,
+                phone_number: phone_number,
+            },
+            success:function(response){
+                document.getElementById("spinner").style.display = "none";
+                console.log(response);
+                $('#modal_message_contact').text(response.message);
+                if(response.error == true){
+                    // document.getElementById("modal_message_contact").classList.add('text-danger');
+                    // // document.getElementById("contact_form").style.display = "none"; 
+                    // $('.account-data-submit').trigger("reset");
+                }
+                else{
+                    
+                    // // document.getElementById("modal_message_account").classList.add('text-success');
+                    // document.getElementById("modal_message_contact").style.color = "#fff"; 
+                    // $('.account-data-submit').trigger("reset");
+                    // // document.getElementById("contact_form").style.display = "none"; 
+                    // document.getElementById("modal-bodii-contact").style.margin = "auto"; 
+                    // document.getElementById("update_modal_icon_contact").style.display = "block";
+                    // document.getElementById("modal-bodi-contact").style.background = "linear-gradient(166.41deg, #14F0C8 30.11%, rgba(48, 193, 176, 0.9) 93.7%)";
+                }
+                // $('#contact_submit').trigger("reset");
+                // $('#contactModal').modal('show');
+            },
+            error:function(e){
+                document.getElementById("spinner").style.display = "none";
+                console.log(e);
+                // $('#contactModal').modal('show');
+                // // $('#modal_message_account').text(e);
+                // $('contact_submit').trigger("reset");
+                // $('#modal_message_contact').text("Sorry, an error occured!");
+                // document.getElementById("modal_message_contact").classList.add('text-danger');
+            },
+        });
+        
+        
+    });
+});

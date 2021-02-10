@@ -1,0 +1,201 @@
+{% extends 'onboarding/base.html' %}
+{% block body %}
+{% load static %}
+<div id="dashboard_div">
+    
+    <div class="dashboard-header" >
+        <p class="onboarding_header_h1">Home</p>
+        <div style="width: auto; display: flex; justify-content: space-between;">
+            <a class="navbar-brand nav-style" href="{% url 'profile' %}"> <img src="{% static 'img/dash_prof.svg' %}" class="align-top img-fluid" alt=" scanner_icon" style="margin-top:-7%;"></a>
+                <img src="{% static 'img/hamburger.svg' %}" class="align-top img-fluid dropdown-toggle" alt=" hamburger_icon" id="navbarDropdown" role="button" data-toggle="dropdown">
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border:0; font-family:Poppins;">
+                <a class="dropdown-item" href="#"> <img src="{% static 'img/about.svg' %}" class="align-top img- mr-3 mb-2" alt=" about_icon">About</a>
+                <a class="dropdown-item" href="{% url 'faq' %}"><img src="{% static 'img/fa.svg' %}" class="align-top img- mr-2 mb-2" alt=" fa_icon">FAQ</a>
+                <a class="dropdown-item" href="{% url 'contact_us' %}"><img src="{% static 'img/contact.svg' %}" class="align-top img- mr-2 mb-2" alt=" contact_icon">Share Feedback</a>
+                <a class="dropdown-item" href="{% url 'signout' %}"><img src="{% static 'img/signout.svg' %}" class="align-top img- mr-2 mb-2" alt=" signout_icon">Sign out</a>
+              </div>
+        </div>
+    
+    </div>
+    <div class="overlay_green">
+        <p  id="dashboard_p">Hello {{data.firstname}}!</p>
+    </div>
+    <div class="card_board">
+        <img src="{% static 'img/eco.svg' %}" class="align-top img-fluid" alt=" home_icon">
+        <div>
+            <p class="text-right p-small" style="font-size: 0.95rem;">You have Collected</p>
+            <p class="onboarding_header_p_big text-right">{{data.total_items_collected|floatformat:2}}</p>
+            <p class="text-right p-small" style="margin-top:-6%; font-size: 0.95rem;">pieces of Plastics</p>
+        </div>
+        
+    </div>
+    <div class="down_board">
+        
+        <div class="onboarding_form_div mb-1 mt-4">
+            <label class="form_label" style="background-color: #F4FFFD">Phone Number</label>
+            <input type="text" id="r-phonenumber"   class="onboarding_form_input" placeholder="07012345678">
+        </div>
+   
+        <!-- result -->
+        
+        <p class="text-center" style="font-weight: 800; font-size:0.8rem;" id="payee_name"></p>
+        <p class="text-center" style="font-weight: 800; font-size:0.8rem;" id="mesage"></p>
+        <div id="showform" class="hide">
+            <div class="onboarding_form_div mb-2">
+                <label class="form_label" style="background-color: #F4FFFD">Name</label>
+                <input type="text" id="r-name"   class="onboarding_form_input" placeholder="07012345678" readonly>
+            </div>
+            <div class="onboarding_form_div mb-2">
+                <label class="form_label" style="background-color: #F4FFFD">Total Plastics Recycled</label>
+                <input type="text" id="r-recycled"   class="onboarding_form_input" placeholder="07012345678" readonly>
+            </div>
+            <div class="onboarding_form_div mb-2">
+                <label class="form_label" style="background-color: #F4FFFD">Total Plastics Yet to be Delivered</label>
+                <input type="text" id="r-not-delivered"   class="onboarding_form_input" placeholder="07012345678" readonly>
+            </div>
+            <form>
+                {% csrf_token %}
+                <input type="phone" name="phone_number" id="ajax_phone_number" class="form-control" placeholder="08011111111" style="border:0;" hidden>
+                <input type="email" name="hub_email" id="hub_email" class="form-control" value="{{data.email}}"  style="border:0;" hidden>
+                <div class="onboarding_form_div mb-2">
+                    <label class="form_label" style="background-color: #F4FFFD">Total Plastics to Deliver Now</label>
+                    <input type="text" id="r-to-deliver" class="onboarding_form_input" placeholder="100">
+                </div>
+                <input type="submit" value="Approve" class="onboarding_form_next" id="confirmation_submit">
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- MENU BAR BEGINS-->
+<nav class="navbar fixed-bottom navbar-light" style="background: #fff; height:60px;">
+    <a class="navbar-brand nav-style" href="{% url 'hub_home' %}" >
+        <img src="{% static 'img/home_new_green.svg' %}" class="align-top img-fluid" alt=" home_icon">
+    </a>
+    <a class="navbar-brand nav-style" href="{% url 'signin' %}">
+        <img src="{% static 'img/signout.svg' %}" class="align-top img-fluid" alt=" wallet_icon">
+    </a>
+</nav>
+
+<script>
+    $('#r-phonenumber').on('keyup', function() {
+        // console.log(this.value);
+        document.getElementById("ajax_phone_number").value= this.value;
+        let phone_number = document.getElementById("ajax_phone_number").value;
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        console.log(this.value);
+        if (this.value.length < 11) {
+            document.getElementById("payee_name").classList.add('text-info');
+            document.getElementById("payee_name").innerHTML= "Phone Number digits incomplete!";
+            document.getElementById("showform").classList.remove('show');
+            document.getElementById("showform").classList.add('hide');
+        }
+        if (this.value.length > 11) {
+            document.getElementById("payee_name").classList.add('text-info');
+            document.getElementById("payee_name").innerHTML= "Sorry! this is no longer a Phone Number!";
+        }
+    if (this.value.length = 11) {
+        // do search for this.value here
+        $.ajax({
+                url:'/hub_confirmation',
+                type:'post',
+                headers:{"X-CSRFToken": $crf_token},
+                data:{
+                    phone_number: phone_number
+                },
+                success:function(response){
+                    console.log(response);
+                    if(response.error == false){
+                        // $('#collectModal').modal('show');
+                        document.getElementById("showform").classList.remove('hide');
+                        document.getElementById("showform").classList.add('show');
+                        document.getElementById("r-name").value= response.user_name;
+                        document.getElementById("r-recycled").value= response.recycled;
+                        document.getElementById("r-not-delivered").value= response.not_delivered;
+                        document.getElementById("payee_name").innerHTML= "";
+                        
+                    }
+                    if(response.error == true){
+                        document.getElementById("payee_name").classList.add('text-info');
+                        document.getElementById("payee_name").innerHTML= response.message;
+                        // document.getElementById("payee_name").innerHTML= "";
+                        
+                    }
+                },
+                error:function(e){
+                    console.log(e);
+                    
+                    // document.getElementById("scan_result_manufacturer").classList.add('text-danger');
+                    // document.getElementById("scan_result_manufacturer").innerHTML= "Sorry, an error occured!";
+                },
+            });
+        
+        }
+        else{
+            document.getElementById("payee_name").classList.add('text-info');
+            // document.getElementById("payee_name").innerHTML= "Phone Number digits incomplete!";
+            document.getElementById("payee_name").innerHTML= "";
+            // document.getElementById("initial").classList.remove('show');
+            // document.getElementById("initial").classList.add('hide');
+    }
+    });
+// COllection confirmation by hub master API
+    $('#confirmation_submit').on('click', function (e) {
+        e.preventDefault();
+        let to_deliver = document.getElementById("r-to-deliver").value;
+        let phone_number = document.getElementById("ajax_phone_number").value;
+        let hub_email = document.getElementById("hub_email").value;
+        let $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+        document.getElementById("spinner").style.display = "block";
+        $.ajax({
+            url:'/confirmation_api',
+            type:'POST',
+            headers:{"X-CSRFToken": $crf_token},
+            data:{
+                to_deliver: to_deliver,
+                phone_number: phone_number,
+                hub_email: hub_email
+            },
+            success:function(response){
+                document.getElementById("spinner").style.display = "none";
+                console.log(response);
+                // document.getElementById("mesage").classList.add('show');
+                // $('#modal_message_contact').text(response.message);
+                if(response.error == true){
+                        document.getElementById("mesage").classList.add('text-danger');
+                        document.getElementById("mesage").innerHTML= response.message; 
+                    setTimeout(function(){ 
+                        document.getElementById("mesage").classList.add('hide');
+                    }, 3000);
+                    
+                    // document.getElementById("modal_message_contact").classList.add('text-danger');
+                    // // document.getElementById("contact_form").style.display = "none"; 
+                    // $('.account-data-submit').trigger("reset");
+                }
+                if(response.error == false){
+                    document.getElementById("mesage").classList.add('show');
+                    document.getElementById("mesage").classList.add('text-info');
+                    document.getElementById("mesage").innerHTML= response.message; 
+                    
+                    document.getElementById("showform").classList.remove('show');
+                    document.getElementById("showform").classList.add('hide'); 
+                    setTimeout(function(){ 
+                        document.getElementById("mesage").classList.add('hide'); 
+                    }, 3000);
+
+                }
+                // $('#contact_submit').trigger("reset");
+                // $('#contactModal').modal('show');
+            },
+            error:function(e){
+                document.getElementById("spinner").style.display = "none";
+                console.log(e);
+            },
+        });
+        
+        
+    });
+</script>>
+{% endblock %}
